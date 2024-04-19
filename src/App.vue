@@ -318,9 +318,6 @@
 import { useCounterStore } from "@/stores/counter"; // Nếu có
 import axios from "axios"; // Nếu có
 import VueCookies from "vue-cookies"; // Nếu có
-// import { GoogleSpreadsheet } from 'google-spreadsheet';
-// import { JWT } from 'google-auth-library';
-// import { google } from 'googleapis';
 
 export default {
   data() {
@@ -492,51 +489,6 @@ export default {
           });
       });
     },
-    async appendToSheet(worksheet, data) {
-      const nextRow = (await worksheet.getRows()).length + 1;
-      await worksheet.addRow({ index: nextRow, ...data });
-    },
-    async writeToSheet() {
-      const { google } = require('googleapis');
-      const sheets = google.sheets('v4');
-
-      // Thông tin xác thực
-      const auth = new google.auth.GoogleAuth({
-        keyFile: '@/facebook-duy.json', // Đường dẫn đến tệp JSON của thông tin xác thực
-        scopes: ['https://www.googleapis.com/auth/spreadsheets']
-      });
-
-      // Thêm dữ liệu vào bảng tính
-      async function addToGoogleSheet(spreadsheetId, range, data) {
-        const authClient = await auth.getClient();
-        const request = {
-          auth: authClient,
-          spreadsheetId: spreadsheetId,
-          range: range,
-          valueInputOption: 'USER_ENTERED',
-          resource: { values: data },
-        };
-
-        try {
-          const response = await sheets.spreadsheets.values.append(request);
-          console.log('Dữ liệu đã được thêm thành công:', response.data);
-        } catch (error) {
-          console.error('Đã xảy ra lỗi:', error);
-        }
-      }
-
-      // Dữ liệu cần thêm vào bảng tính
-      const dataToAdd = [
-        ['Value1', 'Value2', 'Value3'],
-        ['Value4', 'Value5', 'Value6'],
-        // Thêm dữ liệu khác nếu cần
-      ];
-
-      // Gọi hàm để thêm dữ liệu
-      const spreadsheetId = 'spreadsheets/d/1jgaoz11j5QsG5-8p6Hs7FbJ_etqF2-gip9UO2VvVwFg';
-      const range = 'Sheet1!A1:C'; // Điều chỉnh vùng dữ liệu cần thêm
-      addToGoogleSheet(spreadsheetId, range, dataToAdd);
-    }
   },
   components: {},
 };
